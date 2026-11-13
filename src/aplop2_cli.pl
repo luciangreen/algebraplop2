@@ -297,7 +297,7 @@ program_cmd(Fl, File, KeyS) :-
     concat_lists([OutSrc, [FormulaC], InverseCs, LoopCs, [clause(RSpec, atom(true), RNV)]], OutClauses),
     program_from_clauses(OutClauses, OutProg),
     format(user_error, "MARK 7~n", []),
-    check_algebra_proof(Src, Steps, OutProg, CE),
+    ( catch(check_algebra_proof(Src, Steps, OutProg, CE), EX, (print_message(error, EX), fail)) -> true ; format(user_error, "STEPS ~q~n", [Steps]), maplist(proved_step(Src), Steps, PL), format(user_error, "PROVED ~q~n", [PL]), fail ),
     format(user_error, "MARK 10~n", []),
     if_commit(CE = right(Report), true,
               ( CE = left(CM), string_concat("proof rejected: ", CM, DM), die(DM) )),
