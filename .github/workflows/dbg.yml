@@ -1,0 +1,10 @@
+name: dbg
+on: workflow_dispatch
+jobs:
+  dbg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq swi-prolog-nox
+      - run: git clone --depth 1 https://github.com/luciangreen/detlog2 build/detlog2-src
+      - run: swipl dbg.pl 2>&1 | tail -60
