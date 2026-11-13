@@ -24,10 +24,10 @@ main = do
         o <- runP exe args
         report name (want `isInfixOf` o) o
       expectNot name bad args = do
-        o <- runP "./build/algebraplop2" args
+        o <- runP "./build/hs/algebraplop2" args
         report name (not (bad `isInfixOf` o)) o
-      expect = expectWith "./build/algebraplop2"
-      expectD2 = expectWith "./build/detlog2"
+      expect = expectWith "./build/hs/algebraplop2"
+      expectD2 = expectWith "./build/hs/detlog2"
 
   -- discovery from samples ---------------------------------------------------------
   expect "samples: 2,4,8,16 is 2 * 2^i" "formula: 2 * 2 ^ i" ["samples", "2,4,8,16"]
@@ -51,7 +51,7 @@ main = do
   expect "program: fib has no formula" "no_formula" ["program", "examples/sequences.pl", "fib/2"]
   expect "program: loops replaced" "splice-index loops: 1" ["program", "examples/sequences.pl", "tri/2"]
 
-  _ <- runP "./build/algebraplop2" ["program", "examples/sequences.pl", "tri/2", "-o", "build/tri.pl"]
+  _ <- runP "./build/hs/algebraplop2" ["program", "examples/sequences.pl", "tri/2", "-o", "build/tri.pl"]
   expect "proof-check: accepted from files" "proof accepted" ["proof-check", "examples/sequences.pl", "build/tri.pl", "build/tri.pl.proof"]
   tri <- readFile "build/tri.pl"
   triProof <- readFile "build/tri.pl.proof"
@@ -66,7 +66,7 @@ main = do
   expectD2 "detlog2 runs the formula" "V = 55." ["run", "build/tri.pl", "tri__formula(10, V)"]
   expectD2 "detlog2 runs the splice-index loop" "Ts = [1, 3, 6, 10]." ["run", "build/tri.pl", "tris(1, 4, Ts)"]
   expectD2 "the formula keeps the domain" "false." ["run", "build/tri.pl", "tri__formula(-1, V)"]
-  _ <- runP "./build/algebraplop2" ["program", "examples/sequences.pl", "odd/2", "-o", "build/odd.pl"]
+  _ <- runP "./build/hs/algebraplop2" ["program", "examples/sequences.pl", "odd/2", "-o", "build/odd.pl"]
   expectD2 "detlog2 runs the inverse" "N = 4." ["run", "build/odd.pl", "odd__inverse(9, N)"]
   expectD2 "inverse fails off the image" "false." ["run", "build/odd.pl", "odd__inverse(8, N)"]
   expect "proof-check: odd" "proof accepted" ["proof-check", "examples/sequences.pl", "build/odd.pl", "build/odd.pl.proof"]
