@@ -16,15 +16,36 @@ computation with a closed formula, and it gives a checked proof for every rewrit
 
 ## Build
 
-algebraplop2 is written in Haskell. Programs, examples and proofs are written
-in Prolog. It compiles against detlog2's sources.
+algebraplop2 is written in cut-free, choicepoint-free SWI-Prolog: no `!`,
+`;`, `->`, `\+`, `once/1` or `forall/2` in its source. A decision is
+`if_commit/3` (from detlog2's `src/detlog_runtime.pl`), which takes the first
+answer of its condition with `findall/3` + `limit/2`, and generators are only
+called inside `findall/3`, an `if_commit/3` condition or `once_det/1`.
+detlog2's `tools/cutfree.pl` checks every source file in the build. Formulas
+use SWI-Prolog's exact rationals.
 
 ```sh
 git clone https://github.com/luciangreen/detlog2 ../detlog2   # or set DETLOG2_DIR
-runghc Build.hs            # builds build/algebraplop2
-runghc Build.hs test       # builds, then runs tests/Cli.hs
-runghc Build.hs check-ios  # re-runs the 200 recorded input/output pairs in io/ios.txt
+swipl build.pl             # builds build/algebraplop2 (a saved state)
+swipl build.pl test        # builds, runs the cut-free check and tests/cli.pl
+swipl build.pl ci          # as test (cloning detlog2 and mnns if needed), then
+                           # checks the 200 recorded runs in io/ios.txt
+swipl build.pl check-ios   # re-runs the 200 recorded input/output pairs
 ```
+
+The Haskell version it was ported from is kept in `haskell/`
+(`runghc haskell/Build.hs test`). CI builds both and checks that they record
+the same 200 outputs (`swipl io/ios.pl compare haskell/io/ios.txt`).
+
+Layout:
+
+- `algebraplop2.pl` - loader and `main`; loads detlog2's Prolog sources
+- `src/algebra.pl` - formulas, exact fitting and ranking (port of `AlgebraPLOp2.Algebra`)
+- `src/program.pl` - recurrences and sampling (port of `AlgebraPLOp2.Program`)
+- `src/aproof.pl` - the independent proof checker (port of `AlgebraPLOp2.Proof`)
+- `src/aplop2_cli.pl` - the commands
+- `tests/cli.pl`, `io/ios.pl` - end-to-end tests and the 200 recorded runs
+- `haskell/` - the Haskell version
 
 ## Use
 

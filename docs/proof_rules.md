@@ -1,8 +1,8 @@
 # algebraplop2 proof rules
 
 Every `algebraplop2 program` run writes `OUT` and `OUT.proof`. The output is
-written only if the independent checker (`AlgebraPLOp2.Proof`) accepts the proof.
-The checker does not call the discovery code (`AlgebraPLOp2.Algebra.discover`).
+written only if the independent checker (`src/aproof.pl`) accepts the proof.
+The checker does not call the discovery code (`discover/2` in `src/algebra.pl`).
 It reads the source program, evaluates the source's own arithmetic with
 detlog2's `evalArith`, and runs the source with detlog2's reference engine.
 
