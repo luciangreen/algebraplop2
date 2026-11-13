@@ -1,0 +1,28 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.6'
+      - name: SWI-Prolog for the mnns bridge tests
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq swi-prolog-nox
+      - name: Build and test (Build.hs)
+        run: runghc Build.hs ci > ci.log 2>&1; echo "exit $?" >> ci.log; cat ci.log
+      - name: TEMPORARY record the build log and the 200 inputs and outputs
+        if: always() && github.event_name == 'push'
+        run: |
+          (grep -q "^exit 0" ci.log && runghc Build.hs ios > ios.log 2>&1) || true
+          mkdir -p "$RUNNER_TEMP/log"; cp ci.log "$RUNNER_TEMP/log/"; cp ios.log io/ios.txt "$RUNNER_TEMP/log/" 2>/dev/null || true
+          cd "$RUNNER_TEMP/log"; echo "${{ github.sha }}" > status.txt
+          git init -q && git checkout -q -b ci-log && git add . && git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm log
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ci-log
