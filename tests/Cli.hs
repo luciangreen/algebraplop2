@@ -32,7 +32,7 @@ main = do
   -- discovery from samples ---------------------------------------------------------
   expect "samples: 2,4,8,16 is 2 * 2^i" "formula: 2 * 2 ^ i" ["samples", "2,4,8,16"]
   expectNot "samples: 2,4,8,16 is not piecewise" "periodic" ["samples", "2,4,8,16"]
-  expect "samples: affine" "formula: 3 * i + 1" ["samples", "1,4,7,10,13"]
+  expect "samples: affine" "formula: 1 + 3 * i" ["samples", "1,4,7,10,13"]
   expect "samples: quadratic with a rational coefficient" "formula: (i + i * i) // 2" ["samples", "0,1,3,6,10,15"]
   expect "samples: primes have no formula" "no_formula" ["samples", "2,3,5,7,11"]
   expect "samples: too few samples for a held-out check" "no_formula" ["samples", "5,9"]
