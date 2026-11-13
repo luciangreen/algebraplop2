@@ -20,5 +20,6 @@ dbg :-
     forall(( member(F, ['src/algebra.pl', 'src/program.pl', 'src/aproof.pl', 'src/aplop2_cli.pl']),
              absolute_file_name(F, A),
              source_file(user:H, A), functor(H, N, Ar) ),
-           ( trace(N/Ar, -all), trace(N/Ar, +fail) )),
-    catch(program_cmd(af(nothing, nothing, nothing, []), "examples/sequences.pl", "sq/2"), E, (print_message(error, E))).
+           ignore(( trace(N/Ar, -all), trace(N/Ar, +fail) ))),
+    format(user_error, "traced~n", []),
+    ( catch(program_cmd(af(nothing, nothing, nothing, []), "examples/sequences.pl", "sq/2"), E, (print_message(error, E))) -> true ; format(user_error, "FAILED~n", []) ).
