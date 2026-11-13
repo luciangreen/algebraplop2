@@ -1,0 +1,4070 @@
+algebraplop2: 200 inputs and outputs, from real runs (runghc Build.hs ios writes this file; runghc Build.hs check-ios checks it).
+
+1. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-1 [1,1]-3 [1,2]-5 [2,0]-2 [2,1]-5 [2,2]-8'
+   => formula: i + j + i * j
+      term: poly([m([1, 0], 1 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 19
+      proof accepted: fit
+
+2. algebraplop2 samples '3,12,48,192,768,3072'
+   => formula: 3 * 4 ^ i + 0
+      term: geo(3 / 1, 4, 0 / 1)
+      verified_on: 6 samples (3 held out), description length 14
+      proof accepted: fit
+
+3. algebraplop2 samples '0,4,2,12,4,20,6'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (4 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([1], 4 / 1)])])
+      verified_on: 7 samples (3 held out), description length 22
+      proof accepted: fit
+
+4. algebraplop2 program examples/sequences.pl sq/2 --domain 1..12
+   => formula: sq/2 at position i = i * i
+      evidence: verified_on(..(1, 12)) (no first-order recurrence proof)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sq/2, from examples/sequences.pl
+      % verified_on(..(1, 12)); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sq__formula(N, V) :-
+          integer(N),
+          N >= 1,
+          N =< 12,
+          V is N * N.
+      
+      r_spec(sq / 2, position(1), value(2), formula(poly([m([2], 1 / 1)])), expression(i * i), verified_on(..(1, 12))).
+
+5. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-0 [1,1]-3 [1,2]-6 [2,0]-0 [2,1]-4 [2,2]-8'
+   => formula: 2 * j + i * j
+      term: poly([m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+6. algebraplop2 samples '0,-3,0,15'
+   => no_formula
+
+7. algebraplop2 samples '3,1,-1,-3,-5'
+   => formula: 3 + (-2) * i
+      term: poly([m([0], 3 / 1), m([1], (-2) / 1)])
+      verified_on: 5 samples (3 held out), description length 13
+      proof accepted: fit
+
+8. algebraplop2 program examples/sequences.pl sumsq/2 --domain 2..16
+   => formula: sumsq/2 at position i = (i + 3 * (i * i) + 2 * (i * i * i)) // 6
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sumsq/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sumsq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + 3 * (N * N) + 2 * (N * N * N)) // 6.
+      
+      r_spec(sumsq / 2, position(1), value(2), formula(poly([m([1], 1 / 6), m([2], 1 / 2), m([3], 1 / 3)])), expression((i + 3 * (i * i) + 2 * (i * i * i)) // 6), proved(induction)).
+
+9. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-4 [1,1]-5 [1,2]-6 [2,0]-8 [2,1]-10 [2,2]-12'
+   => formula: 4 * i + i * j
+      term: poly([m([1, 0], 4 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 15
+      proof accepted: fit
+
+10. algebraplop2 samples '0,2,2,4,4,6,6,8'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (1 + i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([0], 1 / 1), m([1], 1 / 1)])])
+      verified_on: 8 samples (4 held out), description length 25
+      proof accepted: fit
+
+11. algebraplop2 samples '3,6,1,5,2,4,3,9,1'
+   => no_formula
+
+12. algebraplop2 program examples/sequences.pl pow2/2 --domain 0..11
+   => formula: pow2/2 at position i = 2 ^ i + 0
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for pow2/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      pow2__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 2 ^ N + 0.
+      
+      r_spec(pow2 / 2, position(1), value(2), formula(geo(1 / 1, 2, 0 / 1)), expression(2 ^ i + 0), proved(induction)).
+
+13. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-3 [1,1]-5 [1,2]-7 [2,0]-6 [2,1]-9 [2,2]-12'
+   => formula: 3 * i + j + i * j
+      term: poly([m([1, 0], 3 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+14. algebraplop2 samples '5,3,1,-1,-3,-5'
+   => formula: 5 + (-2) * i
+      term: poly([m([0], 5 / 1), m([1], (-2) / 1)])
+      verified_on: 6 samples (4 held out), description length 14
+      proof accepted: fit
+
+15. algebraplop2 samples '0,0,-2,-6,-12,-20,-30'
+   => formula: i + (-1) * (i * i)
+      term: poly([m([1], 1 / 1), m([2], (-1) / 1)])
+      verified_on: 7 samples (4 held out), description length 13
+      proof accepted: fit
+
+16. algebraplop2 program examples/sequences.pl fib/2 --domain 1..15
+   => no_formula for fib/2 on 1..15
+      (exit code 1)
+
+17. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-2 [1,1]-5 [1,2]-8 [2,0]-4 [2,1]-8 [2,2]-12'
+   => formula: 2 * i + 2 * j + i * j
+      term: poly([m([1, 0], 2 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+18. algebraplop2 samples '6,2,9,5'
+   => no_formula
+
+19. algebraplop2 samples '8,18,48,138,408'
+   => formula: 5 * 3 ^ i + 3
+      term: geo(5 / 1, 3, 3 / 1)
+      verified_on: 5 samples (2 held out), description length 16
+      proof accepted: fit
+
+20. algebraplop2 program examples/sequences.pl grow/2 --domain 2..10
+   => formula: grow/2 at position i = 3 * 2 ^ i + (-1)
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for grow/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      grow__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 3 * 2 ^ N + (-1).
+      
+      r_spec(grow / 2, position(1), value(2), formula(geo(3 / 1, 2, (-1) / 1)), expression(3 * 2 ^ i + (-1)), proved(induction)).
+
+21. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-1 [1,1]-2 [1,2]-3 [2,0]-2 [2,1]-4 [2,2]-6'
+   => formula: i + i * j
+      term: poly([m([1, 0], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 13
+      proof accepted: fit
+
+22. algebraplop2 samples '1,3,3,1,-3,-9,-17,-27'
+   => formula: 1 + 3 * i + (-1) * (i * i)
+      term: poly([m([0], 1 / 1), m([1], 3 / 1), m([2], (-1) / 1)])
+      verified_on: 8 samples (5 held out), description length 19
+      proof accepted: fit
+
+23. algebraplop2 samples '4,16,64,256,1024,4096,16384,65536,262144'
+   => formula: 4 * 4 ^ i + 0
+      term: geo(4 / 1, 4, 0 / 1)
+      verified_on: 9 samples (6 held out), description length 15
+      proof accepted: fit
+
+24. algebraplop2 program examples/sequences.pl odd/2 --domain 0..14
+   => formula: odd/2 at position i = 1 + 2 * i
+      evidence: proved(induction)
+      inverse: odd__inverse(V, N)
+      splice-index loops: 1 findall/between loop(s) replaced by odd__loop/3
+      proof accepted: 4 steps
+      % algebraplop2: positional formula for odd/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          (   integer(0),
+              integer(H),
+              0 >= 0
+          ->  odd__loop(0, H, Vs)
+          ;   findall(V, (between(0, H, I), odd(I, V)), Vs)
+          ).
+      
+      odd__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 1 + 2 * N.
+      
+      odd__inverse(V, N) :-
+          integer(V),
+          D is V - 1,
+          D mod 2 =:= 0,
+          N is D // 2,
+          N >= 0.
+      
+      odd__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   odd__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              odd__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(odd / 2, position(1), value(2), formula(poly([m([0], 1 / 1), m([1], 2 / 1)])), expression(1 + 2 * i), proved(induction)).
+
+25. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-0 [1,1]-2 [1,2]-4 [2,0]-0 [2,1]-3 [2,2]-6'
+   => formula: j + i * j
+      term: poly([m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 13
+      proof accepted: fit
+
+26. algebraplop2 samples '5,11,35,131,515,2051'
+   => formula: 2 * 4 ^ i + 3
+      term: geo(2 / 1, 4, 3 / 1)
+      verified_on: 6 samples (3 held out), description length 16
+      proof accepted: fit
+
+27. algebraplop2 samples '0,-3,0,15,48,105,192'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 7 samples (3 held out), description length 16
+      proof accepted: fit
+
+28. algebraplop2 program examples/sequences.pl tri/2 --domain 1..9
+   => formula: tri/2 at position i = (i + i * i) // 2
+      evidence: proved(induction)
+      splice-index loops: 1 findall/between loop(s) replaced by tri__loop/3
+      proof accepted: 3 steps
+      % algebraplop2: positional formula for tri/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          (   integer(L),
+              integer(H),
+              L >= 0
+          ->  tri__loop(L, H, Ts)
+          ;   findall(T, (between(L, H, I), tri(I, T)), Ts)
+          ).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      tri__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + N * N) // 2.
+      
+      tri__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   tri__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              tri__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(tri / 2, position(1), value(2), formula(poly([m([1], 1 / 2), m([2], 1 / 2)])), expression((i + i * i) // 2), proved(induction)).
+
+29. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-4 [1,1]-7 [1,2]-10 [2,0]-8 [2,1]-12 [2,2]-16'
+   => formula: 4 * i + 2 * j + i * j
+      term: poly([m([1, 0], 4 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 22
+      proof accepted: fit
+
+30. algebraplop2 samples '1,2,4,8'
+   => formula: 2 ^ i + 0
+      term: geo(1 / 1, 2, 0 / 1)
+      verified_on: 4 samples (1 held out), description length 12
+      proof accepted: fit
+
+31. algebraplop2 samples '0,3,2,7,4'
+   => no_formula
+
+32. algebraplop2 program examples/sequences.pl sq/2 --domain 2..13
+   => formula: sq/2 at position i = i * i
+      evidence: verified_on(..(2, 13)) (no first-order recurrence proof)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sq/2, from examples/sequences.pl
+      % verified_on(..(2, 13)); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sq__formula(N, V) :-
+          integer(N),
+          N >= 2,
+          N =< 13,
+          V is N * N.
+      
+      r_spec(sq / 2, position(1), value(2), formula(poly([m([2], 1 / 1)])), expression(i * i), verified_on(..(2, 13))).
+
+33. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-3 [1,1]-4 [1,2]-5 [2,0]-6 [2,1]-8 [2,2]-10'
+   => formula: 3 * i + i * j
+      term: poly([m([1, 0], 3 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+34. algebraplop2 samples '0,-3,0,15,48,105,192,315'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 8 samples (4 held out), description length 16
+      proof accepted: fit
+
+35. algebraplop2 samples '1,-1,-3,-5,-7,-9,-11,-13,-15'
+   => formula: 1 + (-2) * i
+      term: poly([m([0], 1 / 1), m([1], (-2) / 1)])
+      verified_on: 9 samples (7 held out), description length 12
+      proof accepted: fit
+
+36. algebraplop2 program examples/sequences.pl sumsq/2 --domain 0..8
+   => formula: sumsq/2 at position i = (i + 3 * (i * i) + 2 * (i * i * i)) // 6
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sumsq/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sumsq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + 3 * (N * N) + 2 * (N * N * N)) // 6.
+      
+      r_spec(sumsq / 2, position(1), value(2), formula(poly([m([1], 1 / 6), m([2], 1 / 2), m([3], 1 / 3)])), expression((i + 3 * (i * i) + 2 * (i * i * i)) // 6), proved(induction)).
+
+37. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-2 [1,1]-4 [1,2]-6 [2,0]-4 [2,1]-7 [2,2]-10'
+   => formula: 2 * i + j + i * j
+      term: poly([m([1, 0], 2 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+38. algebraplop2 samples '0,6,2,14,4,22'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (2 + 4 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([0], 2 / 1), m([1], 4 / 1)])])
+      verified_on: 6 samples (2 held out), description length 28
+      proof accepted: fit
+
+39. algebraplop2 samples '2,1,3,5,9,4,5'
+   => no_formula
+
+40. algebraplop2 program examples/sequences.pl pow2/2 --domain 1..12
+   => formula: pow2/2 at position i = 2 ^ i + 0
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for pow2/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      pow2__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 2 ^ N + 0.
+      
+      r_spec(pow2 / 2, position(1), value(2), formula(geo(1 / 1, 2, 0 / 1)), expression(2 ^ i + 0), proved(induction)).
+
+41. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-1 [1,1]-4 [1,2]-7 [2,0]-2 [2,1]-6 [2,2]-10'
+   => formula: i + 2 * j + i * j
+      term: poly([m([1, 0], 1 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+42. algebraplop2 samples '3,1,-1,-3'
+   => formula: 3 + (-2) * i
+      term: poly([m([0], 3 / 1), m([1], (-2) / 1)])
+      verified_on: 4 samples (2 held out), description length 13
+      proof accepted: fit
+
+43. algebraplop2 samples '1,4,5,4,1'
+   => formula: 1 + 4 * i + (-1) * (i * i)
+      term: poly([m([0], 1 / 1), m([1], 4 / 1), m([2], (-1) / 1)])
+      verified_on: 5 samples (2 held out), description length 20
+      proof accepted: fit
+
+44. algebraplop2 program examples/sequences.pl fib/2 --domain 2..16
+   => no_formula for fib/2 on 2..16
+      (exit code 1)
+
+45. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-0 [1,1]-1 [1,2]-2 [2,0]-0 [2,1]-2 [2,2]-4'
+   => formula: i * j
+      term: poly([m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 7
+      proof accepted: fit
+
+46. algebraplop2 samples '4,4,4,4,4,4,4,4'
+   => formula: 4
+      term: poly([m([0], 4 / 1)])
+      verified_on: 8 samples (7 held out), description length 7
+      proof accepted: fit
+
+47. algebraplop2 samples '6,15,51,195,771,3075,12291,49155,196611'
+   => formula: 3 * 4 ^ i + 3
+      term: geo(3 / 1, 4, 3 / 1)
+      verified_on: 9 samples (6 held out), description length 16
+      proof accepted: fit
+
+48. algebraplop2 program examples/sequences.pl grow/2 --domain 0..11
+   => formula: grow/2 at position i = 3 * 2 ^ i + (-1)
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for grow/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      grow__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 3 * 2 ^ N + (-1).
+      
+      r_spec(grow / 2, position(1), value(2), formula(geo(3 / 1, 2, (-1) / 1)), expression(3 * 2 ^ i + (-1)), proved(induction)).
+
+49. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-4 [1,1]-6 [1,2]-8 [2,0]-8 [2,1]-11 [2,2]-14'
+   => formula: 4 * i + j + i * j
+      term: poly([m([1, 0], 4 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+50. algebraplop2 samples '2,2,0,-4,-10,-18'
+   => formula: 2 + i + (-1) * (i * i)
+      term: poly([m([0], 2 / 1), m([1], 1 / 1), m([2], (-1) / 1)])
+      verified_on: 6 samples (3 held out), description length 19
+      proof accepted: fit
+
+51. algebraplop2 samples '2,4,8,16,32,64,128'
+   => formula: 2 * 2 ^ i + 0
+      term: geo(2 / 1, 2, 0 / 1)
+      verified_on: 7 samples (4 held out), description length 13
+      proof accepted: fit
+
+52. algebraplop2 program examples/sequences.pl odd/2 --domain 1..15
+   => formula: odd/2 at position i = 1 + 2 * i
+      evidence: proved(induction)
+      inverse: odd__inverse(V, N)
+      splice-index loops: 1 findall/between loop(s) replaced by odd__loop/3
+      proof accepted: 4 steps
+      % algebraplop2: positional formula for odd/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          (   integer(0),
+              integer(H),
+              0 >= 0
+          ->  odd__loop(0, H, Vs)
+          ;   findall(V, (between(0, H, I), odd(I, V)), Vs)
+          ).
+      
+      odd__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 1 + 2 * N.
+      
+      odd__inverse(V, N) :-
+          integer(V),
+          D is V - 1,
+          D mod 2 =:= 0,
+          N is D // 2,
+          N >= 0.
+      
+      odd__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   odd__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              odd__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(odd / 2, position(1), value(2), formula(poly([m([0], 1 / 1), m([1], 2 / 1)])), expression(1 + 2 * i), proved(induction)).
+
+53. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-3 [1,1]-6 [1,2]-9 [2,0]-6 [2,1]-10 [2,2]-14'
+   => formula: 3 * i + 2 * j + i * j
+      term: poly([m([1, 0], 3 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+54. algebraplop2 samples '8,13,23,43'
+   => formula: 5 * 2 ^ i + 3
+      term: geo(5 / 1, 2, 3 / 1)
+      verified_on: 4 samples (1 held out), description length 16
+      proof accepted: fit
+
+55. algebraplop2 samples '0,-3,0,15,48'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 5 samples (1 held out), description length 16
+      proof accepted: fit
+
+56. algebraplop2 program examples/sequences.pl tri/2 --domain 2..10
+   => formula: tri/2 at position i = (i + i * i) // 2
+      evidence: proved(induction)
+      splice-index loops: 1 findall/between loop(s) replaced by tri__loop/3
+      proof accepted: 3 steps
+      % algebraplop2: positional formula for tri/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          (   integer(L),
+              integer(H),
+              L >= 0
+          ->  tri__loop(L, H, Ts)
+          ;   findall(T, (between(L, H, I), tri(I, T)), Ts)
+          ).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      tri__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + N * N) // 2.
+      
+      tri__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   tri__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              tri__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(tri / 2, position(1), value(2), formula(poly([m([1], 1 / 2), m([2], 1 / 2)])), expression((i + i * i) // 2), proved(induction)).
+
+57. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-2 [1,1]-3 [1,2]-4 [2,0]-4 [2,1]-6 [2,2]-8'
+   => formula: 2 * i + i * j
+      term: poly([m([1, 0], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+58. algebraplop2 samples '4,12,36,108,324,972,2916,8748'
+   => formula: 4 * 3 ^ i + 0
+      term: geo(4 / 1, 3, 0 / 1)
+      verified_on: 8 samples (5 held out), description length 14
+      proof accepted: fit
+
+59. algebraplop2 samples '0,7,2,17,4,27,6,37,8'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (2 + 5 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([0], 2 / 1), m([1], 5 / 1)])])
+      verified_on: 9 samples (5 held out), description length 28
+      proof accepted: fit
+
+60. algebraplop2 program examples/sequences.pl sq/2 --domain 0..14
+   => formula: sq/2 at position i = i * i
+      evidence: verified_on(..(0, 14)) (no first-order recurrence proof)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sq/2, from examples/sequences.pl
+      % verified_on(..(0, 14)); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          N =< 14,
+          V is N * N.
+      
+      r_spec(sq / 2, position(1), value(2), formula(poly([m([2], 1 / 1)])), expression(i * i), verified_on(..(0, 14))).
+
+61. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-1 [1,1]-3 [1,2]-5 [2,0]-2 [2,1]-5 [2,2]-8'
+   => formula: i + j + i * j
+      term: poly([m([1, 0], 1 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 19
+      proof accepted: fit
+
+62. algebraplop2 samples '0,-3,0,15,48,105'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 6 samples (2 held out), description length 16
+      proof accepted: fit
+
+63. algebraplop2 samples '4,2,0,-2,-4,-6,-8'
+   => formula: 4 + (-2) * i
+      term: poly([m([0], 4 / 1), m([1], (-2) / 1)])
+      verified_on: 7 samples (5 held out), description length 14
+      proof accepted: fit
+
+64. algebraplop2 program examples/sequences.pl sumsq/2 --domain 1..9
+   => formula: sumsq/2 at position i = (i + 3 * (i * i) + 2 * (i * i * i)) // 6
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sumsq/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sumsq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + 3 * (N * N) + 2 * (N * N * N)) // 6.
+      
+      r_spec(sumsq / 2, position(1), value(2), formula(poly([m([1], 1 / 6), m([2], 1 / 2), m([3], 1 / 3)])), expression((i + 3 * (i * i) + 2 * (i * i * i)) // 6), proved(induction)).
+
+65. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-0 [1,1]-3 [1,2]-6 [2,0]-0 [2,1]-4 [2,2]-8'
+   => formula: 2 * j + i * j
+      term: poly([m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+66. algebraplop2 samples '0,2,2,6'
+   => no_formula
+
+67. algebraplop2 samples '1,5,5,2,5'
+   => no_formula
+
+68. algebraplop2 program examples/sequences.pl pow2/2 --domain 2..13
+   => formula: pow2/2 at position i = 2 ^ i + 0
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for pow2/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      pow2__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 2 ^ N + 0.
+      
+      r_spec(pow2 / 2, position(1), value(2), formula(geo(1 / 1, 2, 0 / 1)), expression(2 ^ i + 0), proved(induction)).
+
+69. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-4 [1,1]-5 [1,2]-6 [2,0]-8 [2,1]-10 [2,2]-12'
+   => formula: 4 * i + i * j
+      term: poly([m([1, 0], 4 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 15
+      proof accepted: fit
+
+70. algebraplop2 samples '1,-1,-3,-5,-7,-9,-11,-13'
+   => formula: 1 + (-2) * i
+      term: poly([m([0], 1 / 1), m([1], (-2) / 1)])
+      verified_on: 8 samples (6 held out), description length 12
+      proof accepted: fit
+
+71. algebraplop2 samples '2,3,2,-1,-6,-13,-22,-33,-46'
+   => formula: 2 + 2 * i + (-1) * (i * i)
+      term: poly([m([0], 2 / 1), m([1], 2 / 1), m([2], (-1) / 1)])
+      verified_on: 9 samples (6 held out), description length 20
+      proof accepted: fit
+
+72. algebraplop2 program examples/sequences.pl fib/2 --domain 0..8
+   => no_formula for fib/2 on 0..8
+      (exit code 1)
+
+73. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-3 [1,1]-5 [1,2]-7 [2,0]-6 [2,1]-9 [2,2]-12'
+   => formula: 3 * i + j + i * j
+      term: poly([m([1, 0], 3 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+74. algebraplop2 samples '5,3,5,3,1,4'
+   => no_formula
+
+75. algebraplop2 samples '4,5,7,11,19,35,67'
+   => formula: 2 ^ i + 3
+      term: geo(1 / 1, 2, 3 / 1)
+      verified_on: 7 samples (4 held out), description length 14
+      proof accepted: fit
+
+76. algebraplop2 program examples/sequences.pl grow/2 --domain 1..12
+   => formula: grow/2 at position i = 3 * 2 ^ i + (-1)
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for grow/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      grow__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 3 * 2 ^ N + (-1).
+      
+      r_spec(grow / 2, position(1), value(2), formula(geo(3 / 1, 2, (-1) / 1)), expression(3 * 2 ^ i + (-1)), proved(induction)).
+
+77. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-2 [1,1]-5 [1,2]-8 [2,0]-4 [2,1]-8 [2,2]-12'
+   => formula: 2 * i + 2 * j + i * j
+      term: poly([m([1, 0], 2 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+78. algebraplop2 samples '0,3,4,3'
+   => formula: 4 * i + (-1) * (i * i)
+      term: poly([m([1], 4 / 1), m([2], (-1) / 1)])
+      verified_on: 4 samples (1 held out), description length 15
+      proof accepted: fit
+
+79. algebraplop2 samples '5,15,45,135,405'
+   => formula: 5 * 3 ^ i + 0
+      term: geo(5 / 1, 3, 0 / 1)
+      verified_on: 5 samples (2 held out), description length 14
+      proof accepted: fit
+
+80. algebraplop2 program examples/sequences.pl odd/2 --domain 2..16
+   => formula: odd/2 at position i = 1 + 2 * i
+      evidence: proved(induction)
+      inverse: odd__inverse(V, N)
+      splice-index loops: 1 findall/between loop(s) replaced by odd__loop/3
+      proof accepted: 4 steps
+      % algebraplop2: positional formula for odd/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          (   integer(0),
+              integer(H),
+              0 >= 0
+          ->  odd__loop(0, H, Vs)
+          ;   findall(V, (between(0, H, I), odd(I, V)), Vs)
+          ).
+      
+      odd__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 1 + 2 * N.
+      
+      odd__inverse(V, N) :-
+          integer(V),
+          D is V - 1,
+          D mod 2 =:= 0,
+          N is D // 2,
+          N >= 0.
+      
+      odd__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   odd__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              odd__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(odd / 2, position(1), value(2), formula(poly([m([0], 1 / 1), m([1], 2 / 1)])), expression(1 + 2 * i), proved(induction)).
+
+81. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-1 [1,1]-2 [1,2]-3 [2,0]-2 [2,1]-4 [2,2]-6'
+   => formula: i + i * j
+      term: poly([m([1, 0], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 13
+      proof accepted: fit
+
+82. algebraplop2 samples '6,12,30,84,246,732,2190,6564'
+   => formula: 3 * 3 ^ i + 3
+      term: geo(3 / 1, 3, 3 / 1)
+      verified_on: 8 samples (5 held out), description length 15
+      proof accepted: fit
+
+83. algebraplop2 samples '0,-3,0,15,48,105,192,315,480'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 9 samples (5 held out), description length 16
+      proof accepted: fit
+
+84. algebraplop2 program examples/sequences.pl tri/2 --domain 0..11
+   => formula: tri/2 at position i = (i + i * i) // 2
+      evidence: proved(induction)
+      splice-index loops: 1 findall/between loop(s) replaced by tri__loop/3
+      proof accepted: 3 steps
+      % algebraplop2: positional formula for tri/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          (   integer(L),
+              integer(H),
+              L >= 0
+          ->  tri__loop(L, H, Ts)
+          ;   findall(T, (between(L, H, I), tri(I, T)), Ts)
+          ).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      tri__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + N * N) // 2.
+      
+      tri__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   tri__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              tri__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(tri / 2, position(1), value(2), formula(poly([m([1], 1 / 2), m([2], 1 / 2)])), expression((i + i * i) // 2), proved(induction)).
+
+85. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-0 [1,1]-2 [1,2]-4 [2,0]-0 [2,1]-3 [2,2]-6'
+   => formula: j + i * j
+      term: poly([m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 13
+      proof accepted: fit
+
+86. algebraplop2 samples '2,8,32,128,512,2048'
+   => formula: 2 * 4 ^ i + 0
+      term: geo(2 / 1, 4, 0 / 1)
+      verified_on: 6 samples (3 held out), description length 14
+      proof accepted: fit
+
+87. algebraplop2 samples '0,3,2,9,4,15,6'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (3 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([1], 3 / 1)])])
+      verified_on: 7 samples (3 held out), description length 21
+      proof accepted: fit
+
+88. algebraplop2 program examples/sequences.pl sq/2 --domain 1..15
+   => formula: sq/2 at position i = i * i
+      evidence: verified_on(..(1, 15)) (no first-order recurrence proof)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sq/2, from examples/sequences.pl
+      % verified_on(..(1, 15)); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sq__formula(N, V) :-
+          integer(N),
+          N >= 1,
+          N =< 15,
+          V is N * N.
+      
+      r_spec(sq / 2, position(1), value(2), formula(poly([m([2], 1 / 1)])), expression(i * i), verified_on(..(1, 15))).
+
+89. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-4 [1,1]-7 [1,2]-10 [2,0]-8 [2,1]-12 [2,2]-16'
+   => formula: 4 * i + 2 * j + i * j
+      term: poly([m([1, 0], 4 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 22
+      proof accepted: fit
+
+90. algebraplop2 samples '0,-3,0,15'
+   => no_formula
+
+91. algebraplop2 samples '2,0,-2,-4,-6'
+   => formula: 2 + (-2) * i
+      term: poly([m([0], 2 / 1), m([1], (-2) / 1)])
+      verified_on: 5 samples (3 held out), description length 13
+      proof accepted: fit
+
+92. algebraplop2 program examples/sequences.pl sumsq/2 --domain 2..10
+   => formula: sumsq/2 at position i = (i + 3 * (i * i) + 2 * (i * i * i)) // 6
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sumsq/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sumsq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + 3 * (N * N) + 2 * (N * N * N)) // 6.
+      
+      r_spec(sumsq / 2, position(1), value(2), formula(poly([m([1], 1 / 6), m([2], 1 / 2), m([3], 1 / 3)])), expression((i + 3 * (i * i) + 2 * (i * i * i)) // 6), proved(induction)).
+
+93. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-3 [1,1]-4 [1,2]-5 [2,0]-6 [2,1]-8 [2,2]-10'
+   => formula: 3 * i + i * j
+      term: poly([m([1, 0], 3 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+94. algebraplop2 samples '0,6,2,16,4,26,6,36'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (1 + 5 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([0], 1 / 1), m([1], 5 / 1)])])
+      verified_on: 8 samples (4 held out), description length 27
+      proof accepted: fit
+
+95. algebraplop2 samples '6,2,9,5,1,4,1,3,5'
+   => no_formula
+
+96. algebraplop2 program examples/sequences.pl pow2/2 --domain 0..14
+   => formula: pow2/2 at position i = 2 ^ i + 0
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for pow2/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      pow2__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 2 ^ N + 0.
+      
+      r_spec(pow2 / 2, position(1), value(2), formula(geo(1 / 1, 2, 0 / 1)), expression(2 ^ i + 0), proved(induction)).
+
+97. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-2 [1,1]-4 [1,2]-6 [2,0]-4 [2,1]-7 [2,2]-10'
+   => formula: 2 * i + j + i * j
+      term: poly([m([1, 0], 2 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+98. algebraplop2 samples '4,2,0,-2,-4,-6'
+   => formula: 4 + (-2) * i
+      term: poly([m([0], 4 / 1), m([1], (-2) / 1)])
+      verified_on: 6 samples (4 held out), description length 14
+      proof accepted: fit
+
+99. algebraplop2 samples '0,4,6,6,4,0,-6'
+   => formula: 5 * i + (-1) * (i * i)
+      term: poly([m([1], 5 / 1), m([2], (-1) / 1)])
+      verified_on: 7 samples (4 held out), description length 15
+      proof accepted: fit
+
+100. algebraplop2 program examples/sequences.pl fib/2 --domain 1..9
+   => no_formula for fib/2 on 1..9
+      (exit code 1)
+
+101. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-1 [1,1]-4 [1,2]-7 [2,0]-2 [2,1]-6 [2,2]-10'
+   => formula: i + 2 * j + i * j
+      term: poly([m([1, 0], 1 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+102. algebraplop2 samples '1,9,6,3'
+   => no_formula
+
+103. algebraplop2 samples '7,15,39,111,327'
+   => formula: 4 * 3 ^ i + 3
+      term: geo(4 / 1, 3, 3 / 1)
+      verified_on: 5 samples (2 held out), description length 16
+      proof accepted: fit
+
+104. algebraplop2 program examples/sequences.pl grow/2 --domain 2..13
+   => formula: grow/2 at position i = 3 * 2 ^ i + (-1)
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for grow/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      grow__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 3 * 2 ^ N + (-1).
+      
+      r_spec(grow / 2, position(1), value(2), formula(geo(3 / 1, 2, (-1) / 1)), expression(3 * 2 ^ i + (-1)), proved(induction)).
+
+105. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-0 [1,1]-1 [1,2]-2 [2,0]-0 [2,1]-2 [2,2]-4'
+   => formula: i * j
+      term: poly([m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 7
+      proof accepted: fit
+
+106. algebraplop2 samples '1,2,1,-2,-7,-14,-23,-34'
+   => formula: 1 + 2 * i + (-1) * (i * i)
+      term: poly([m([0], 1 / 1), m([1], 2 / 1), m([2], (-1) / 1)])
+      verified_on: 8 samples (5 held out), description length 19
+      proof accepted: fit
+
+107. algebraplop2 samples '3,12,48,192,768,3072,12288,49152,196608'
+   => formula: 3 * 4 ^ i + 0
+      term: geo(3 / 1, 4, 0 / 1)
+      verified_on: 9 samples (6 held out), description length 14
+      proof accepted: fit
+
+108. algebraplop2 program examples/sequences.pl odd/2 --domain 0..8
+   => formula: odd/2 at position i = 1 + 2 * i
+      evidence: proved(induction)
+      inverse: odd__inverse(V, N)
+      splice-index loops: 1 findall/between loop(s) replaced by odd__loop/3
+      proof accepted: 4 steps
+      % algebraplop2: positional formula for odd/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          (   integer(0),
+              integer(H),
+              0 >= 0
+          ->  odd__loop(0, H, Vs)
+          ;   findall(V, (between(0, H, I), odd(I, V)), Vs)
+          ).
+      
+      odd__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 1 + 2 * N.
+      
+      odd__inverse(V, N) :-
+          integer(V),
+          D is V - 1,
+          D mod 2 =:= 0,
+          N is D // 2,
+          N >= 0.
+      
+      odd__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   odd__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              odd__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(odd / 2, position(1), value(2), formula(poly([m([0], 1 / 1), m([1], 2 / 1)])), expression(1 + 2 * i), proved(induction)).
+
+109. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-4 [1,1]-6 [1,2]-8 [2,0]-8 [2,1]-11 [2,2]-14'
+   => formula: 4 * i + j + i * j
+      term: poly([m([1, 0], 4 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+110. algebraplop2 samples '4,7,19,67,259,1027'
+   => formula: 4 ^ i + 3
+      term: geo(1 / 1, 4, 3 / 1)
+      verified_on: 6 samples (3 held out), description length 15
+      proof accepted: fit
+
+111. algebraplop2 samples '0,-3,0,15,48,105,192'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 7 samples (3 held out), description length 16
+      proof accepted: fit
+
+112. algebraplop2 program examples/sequences.pl tri/2 --domain 1..12
+   => formula: tri/2 at position i = (i + i * i) // 2
+      evidence: proved(induction)
+      splice-index loops: 1 findall/between loop(s) replaced by tri__loop/3
+      proof accepted: 3 steps
+      % algebraplop2: positional formula for tri/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          (   integer(L),
+              integer(H),
+              L >= 0
+          ->  tri__loop(L, H, Ts)
+          ;   findall(T, (between(L, H, I), tri(I, T)), Ts)
+          ).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      tri__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + N * N) // 2.
+      
+      tri__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   tri__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              tri__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(tri / 2, position(1), value(2), formula(poly([m([1], 1 / 2), m([2], 1 / 2)])), expression((i + i * i) // 2), proved(induction)).
+
+113. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-3 [1,1]-6 [1,2]-9 [2,0]-6 [2,1]-10 [2,2]-14'
+   => formula: 3 * i + 2 * j + i * j
+      term: poly([m([1, 0], 3 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+114. algebraplop2 samples '5,10,20,40'
+   => formula: 5 * 2 ^ i + 0
+      term: geo(5 / 1, 2, 0 / 1)
+      verified_on: 4 samples (1 held out), description length 14
+      proof accepted: fit
+
+115. algebraplop2 samples '0,2,2,4,4'
+   => no_formula
+
+116. algebraplop2 program examples/sequences.pl sq/2 --domain 2..16
+   => formula: sq/2 at position i = i * i
+      evidence: verified_on(..(2, 16)) (no first-order recurrence proof)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sq/2, from examples/sequences.pl
+      % verified_on(..(2, 16)); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sq__formula(N, V) :-
+          integer(N),
+          N >= 2,
+          N =< 16,
+          V is N * N.
+      
+      r_spec(sq / 2, position(1), value(2), formula(poly([m([2], 1 / 1)])), expression(i * i), verified_on(..(2, 16))).
+
+117. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-2 [1,1]-3 [1,2]-4 [2,0]-4 [2,1]-6 [2,2]-8'
+   => formula: 2 * i + i * j
+      term: poly([m([1, 0], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+118. algebraplop2 samples '0,-3,0,15,48,105,192,315'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 8 samples (4 held out), description length 16
+      proof accepted: fit
+
+119. algebraplop2 samples '5,3,1,-1,-3,-5,-7,-9,-11'
+   => formula: 5 + (-2) * i
+      term: poly([m([0], 5 / 1), m([1], (-2) / 1)])
+      verified_on: 9 samples (7 held out), description length 14
+      proof accepted: fit
+
+120. algebraplop2 program examples/sequences.pl sumsq/2 --domain 0..11
+   => formula: sumsq/2 at position i = (i + 3 * (i * i) + 2 * (i * i * i)) // 6
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sumsq/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sumsq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + 3 * (N * N) + 2 * (N * N * N)) // 6.
+      
+      r_spec(sumsq / 2, position(1), value(2), formula(poly([m([1], 1 / 6), m([2], 1 / 2), m([3], 1 / 3)])), expression((i + 3 * (i * i) + 2 * (i * i * i)) // 6), proved(induction)).
+
+121. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-1 [1,1]-3 [1,2]-5 [2,0]-2 [2,1]-5 [2,2]-8'
+   => formula: i + j + i * j
+      term: poly([m([1, 0], 1 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 19
+      proof accepted: fit
+
+122. algebraplop2 samples '0,5,2,11,4,17'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (2 + 3 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([0], 2 / 1), m([1], 3 / 1)])])
+      verified_on: 6 samples (2 held out), description length 27
+      proof accepted: fit
+
+123. algebraplop2 samples '4,4,4,4,4,4,4'
+   => formula: 4
+      term: poly([m([0], 4 / 1)])
+      verified_on: 7 samples (6 held out), description length 7
+      proof accepted: fit
+
+124. algebraplop2 program examples/sequences.pl pow2/2 --domain 1..15
+   => formula: pow2/2 at position i = 2 ^ i + 0
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for pow2/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      pow2__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 2 ^ N + 0.
+      
+      r_spec(pow2 / 2, position(1), value(2), formula(geo(1 / 1, 2, 0 / 1)), expression(2 ^ i + 0), proved(induction)).
+
+125. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-0 [1,1]-3 [1,2]-6 [2,0]-0 [2,1]-4 [2,2]-8'
+   => formula: 2 * j + i * j
+      term: poly([m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+126. algebraplop2 samples '2,0,-2,-4'
+   => formula: 2 + (-2) * i
+      term: poly([m([0], 2 / 1), m([1], (-2) / 1)])
+      verified_on: 4 samples (2 held out), description length 13
+      proof accepted: fit
+
+127. algebraplop2 samples '1,3,3,1,-3'
+   => formula: 1 + 3 * i + (-1) * (i * i)
+      term: poly([m([0], 1 / 1), m([1], 3 / 1), m([2], (-1) / 1)])
+      verified_on: 5 samples (2 held out), description length 19
+      proof accepted: fit
+
+128. algebraplop2 program examples/sequences.pl fib/2 --domain 2..10
+   => no_formula for fib/2 on 2..10
+      (exit code 1)
+
+129. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-4 [1,1]-5 [1,2]-6 [2,0]-8 [2,1]-10 [2,2]-12'
+   => formula: 4 * i + i * j
+      term: poly([m([1, 0], 4 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 15
+      proof accepted: fit
+
+130. algebraplop2 samples '3,1,5,6,5,4,9,5'
+   => no_formula
+
+131. algebraplop2 samples '5,11,35,131,515,2051,8195,32771,131075'
+   => formula: 2 * 4 ^ i + 3
+      term: geo(2 / 1, 4, 3 / 1)
+      verified_on: 9 samples (6 held out), description length 16
+      proof accepted: fit
+
+132. algebraplop2 program examples/sequences.pl grow/2 --domain 0..14
+   => formula: grow/2 at position i = 3 * 2 ^ i + (-1)
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for grow/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      grow__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 3 * 2 ^ N + (-1).
+      
+      r_spec(grow / 2, position(1), value(2), formula(geo(3 / 1, 2, (-1) / 1)), expression(3 * 2 ^ i + (-1)), proved(induction)).
+
+133. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-3 [1,1]-5 [1,2]-7 [2,0]-6 [2,1]-9 [2,2]-12'
+   => formula: 3 * i + j + i * j
+      term: poly([m([1, 0], 3 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+134. algebraplop2 samples '2,6,8,8,6,2'
+   => formula: 2 + 5 * i + (-1) * (i * i)
+      term: poly([m([0], 2 / 1), m([1], 5 / 1), m([2], (-1) / 1)])
+      verified_on: 6 samples (3 held out), description length 21
+      proof accepted: fit
+
+135. algebraplop2 samples '1,2,4,8,16,32,64'
+   => formula: 2 ^ i + 0
+      term: geo(1 / 1, 2, 0 / 1)
+      verified_on: 7 samples (4 held out), description length 12
+      proof accepted: fit
+
+136. algebraplop2 program examples/sequences.pl odd/2 --domain 1..9
+   => formula: odd/2 at position i = 1 + 2 * i
+      evidence: proved(induction)
+      inverse: odd__inverse(V, N)
+      splice-index loops: 1 findall/between loop(s) replaced by odd__loop/3
+      proof accepted: 4 steps
+      % algebraplop2: positional formula for odd/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          (   integer(0),
+              integer(H),
+              0 >= 0
+          ->  odd__loop(0, H, Vs)
+          ;   findall(V, (between(0, H, I), odd(I, V)), Vs)
+          ).
+      
+      odd__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 1 + 2 * N.
+      
+      odd__inverse(V, N) :-
+          integer(V),
+          D is V - 1,
+          D mod 2 =:= 0,
+          N is D // 2,
+          N >= 0.
+      
+      odd__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   odd__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              odd__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(odd / 2, position(1), value(2), formula(poly([m([0], 1 / 1), m([1], 2 / 1)])), expression(1 + 2 * i), proved(induction)).
+
+137. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-2 [1,1]-5 [1,2]-8 [2,0]-4 [2,1]-8 [2,2]-12'
+   => formula: 2 * i + 2 * j + i * j
+      term: poly([m([1, 0], 2 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+138. algebraplop2 samples '7,11,19,35'
+   => formula: 4 * 2 ^ i + 3
+      term: geo(4 / 1, 2, 3 / 1)
+      verified_on: 4 samples (1 held out), description length 16
+      proof accepted: fit
+
+139. algebraplop2 samples '0,-3,0,15,48'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 5 samples (1 held out), description length 16
+      proof accepted: fit
+
+140. algebraplop2 program examples/sequences.pl tri/2 --domain 2..13
+   => formula: tri/2 at position i = (i + i * i) // 2
+      evidence: proved(induction)
+      splice-index loops: 1 findall/between loop(s) replaced by tri__loop/3
+      proof accepted: 3 steps
+      % algebraplop2: positional formula for tri/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          (   integer(L),
+              integer(H),
+              L >= 0
+          ->  tri__loop(L, H, Ts)
+          ;   findall(T, (between(L, H, I), tri(I, T)), Ts)
+          ).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      tri__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + N * N) // 2.
+      
+      tri__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   tri__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              tri__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(tri / 2, position(1), value(2), formula(poly([m([1], 1 / 2), m([2], 1 / 2)])), expression((i + i * i) // 2), proved(induction)).
+
+141. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-1 [1,1]-2 [1,2]-3 [2,0]-2 [2,1]-4 [2,2]-6'
+   => formula: i + i * j
+      term: poly([m([1, 0], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 13
+      proof accepted: fit
+
+142. algebraplop2 samples '3,9,27,81,243,729,2187,6561'
+   => formula: 3 * 3 ^ i + 0
+      term: geo(3 / 1, 3, 0 / 1)
+      verified_on: 8 samples (5 held out), description length 13
+      proof accepted: fit
+
+143. algebraplop2 samples '0,6,2,14,4,22,6,30,8'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (2 + 4 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([0], 2 / 1), m([1], 4 / 1)])])
+      verified_on: 9 samples (5 held out), description length 28
+      proof accepted: fit
+
+144. algebraplop2 program examples/sequences.pl sq/2 --domain 0..8
+   => formula: sq/2 at position i = i * i
+      evidence: verified_on(..(0, 8)) (no first-order recurrence proof)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sq/2, from examples/sequences.pl
+      % verified_on(..(0, 8)); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          N =< 8,
+          V is N * N.
+      
+      r_spec(sq / 2, position(1), value(2), formula(poly([m([2], 1 / 1)])), expression(i * i), verified_on(..(0, 8))).
+
+145. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-0 [1,1]-2 [1,2]-4 [2,0]-0 [2,1]-3 [2,2]-6'
+   => formula: j + i * j
+      term: poly([m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 13
+      proof accepted: fit
+
+146. algebraplop2 samples '0,-3,0,15,48,105'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 6 samples (2 held out), description length 16
+      proof accepted: fit
+
+147. algebraplop2 samples '3,1,-1,-3,-5,-7,-9'
+   => formula: 3 + (-2) * i
+      term: poly([m([0], 3 / 1), m([1], (-2) / 1)])
+      verified_on: 7 samples (5 held out), description length 13
+      proof accepted: fit
+
+148. algebraplop2 program examples/sequences.pl sumsq/2 --domain 1..12
+   => formula: sumsq/2 at position i = (i + 3 * (i * i) + 2 * (i * i * i)) // 6
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sumsq/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sumsq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + 3 * (N * N) + 2 * (N * N * N)) // 6.
+      
+      r_spec(sumsq / 2, position(1), value(2), formula(poly([m([1], 1 / 6), m([2], 1 / 2), m([3], 1 / 3)])), expression((i + 3 * (i * i) + 2 * (i * i * i)) // 6), proved(induction)).
+
+149. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-4 [1,1]-7 [1,2]-10 [2,0]-8 [2,1]-12 [2,2]-16'
+   => formula: 4 * i + 2 * j + i * j
+      term: poly([m([1, 0], 4 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 22
+      proof accepted: fit
+
+150. algebraplop2 samples '0,1,2,3'
+   => formula: i
+      term: poly([m([1], 1 / 1)])
+      verified_on: 4 samples (2 held out), description length 6
+      proof accepted: fit
+
+151. algebraplop2 samples '5,3,5,3,1'
+   => no_formula
+
+152. algebraplop2 program examples/sequences.pl pow2/2 --domain 2..16
+   => formula: pow2/2 at position i = 2 ^ i + 0
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for pow2/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      pow2__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 2 ^ N + 0.
+      
+      r_spec(pow2 / 2, position(1), value(2), formula(geo(1 / 1, 2, 0 / 1)), expression(2 ^ i + 0), proved(induction)).
+
+153. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-3 [1,1]-4 [1,2]-5 [2,0]-6 [2,1]-8 [2,2]-10'
+   => formula: 3 * i + i * j
+      term: poly([m([1, 0], 3 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+154. algebraplop2 samples '5,3,1,-1,-3,-5,-7,-9'
+   => formula: 5 + (-2) * i
+      term: poly([m([0], 5 / 1), m([1], (-2) / 1)])
+      verified_on: 8 samples (6 held out), description length 14
+      proof accepted: fit
+
+155. algebraplop2 samples '2,2,0,-4,-10,-18,-28,-40,-54'
+   => formula: 2 + i + (-1) * (i * i)
+      term: poly([m([0], 2 / 1), m([1], 1 / 1), m([2], (-1) / 1)])
+      verified_on: 9 samples (6 held out), description length 19
+      proof accepted: fit
+
+156. algebraplop2 program examples/sequences.pl fib/2 --domain 0..11
+   => no_formula for fib/2 on 0..11
+      (exit code 1)
+
+157. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-2 [1,1]-4 [1,2]-6 [2,0]-4 [2,1]-7 [2,2]-10'
+   => formula: 2 * i + j + i * j
+      term: poly([m([1, 0], 2 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+158. algebraplop2 samples '5,5,1,9,3,4'
+   => no_formula
+
+159. algebraplop2 samples '8,13,23,43,83,163,323'
+   => formula: 5 * 2 ^ i + 3
+      term: geo(5 / 1, 2, 3 / 1)
+      verified_on: 7 samples (4 held out), description length 16
+      proof accepted: fit
+
+160. algebraplop2 program examples/sequences.pl grow/2 --domain 1..15
+   => formula: grow/2 at position i = 3 * 2 ^ i + (-1)
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for grow/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      grow__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 3 * 2 ^ N + (-1).
+      
+      r_spec(grow / 2, position(1), value(2), formula(geo(3 / 1, 2, (-1) / 1)), expression(3 * 2 ^ i + (-1)), proved(induction)).
+
+161. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-1 [1,1]-4 [1,2]-7 [2,0]-2 [2,1]-6 [2,2]-10'
+   => formula: i + 2 * j + i * j
+      term: poly([m([1, 0], 1 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+162. algebraplop2 samples '0,2,2,0'
+   => formula: 3 * i + (-1) * (i * i)
+      term: poly([m([1], 3 / 1), m([2], (-1) / 1)])
+      verified_on: 4 samples (1 held out), description length 14
+      proof accepted: fit
+
+163. algebraplop2 samples '4,12,36,108,324'
+   => formula: 4 * 3 ^ i + 0
+      term: geo(4 / 1, 3, 0 / 1)
+      verified_on: 5 samples (2 held out), description length 14
+      proof accepted: fit
+
+164. algebraplop2 program examples/sequences.pl odd/2 --domain 2..10
+   => formula: odd/2 at position i = 1 + 2 * i
+      evidence: proved(induction)
+      inverse: odd__inverse(V, N)
+      splice-index loops: 1 findall/between loop(s) replaced by odd__loop/3
+      proof accepted: 4 steps
+      % algebraplop2: positional formula for odd/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          (   integer(0),
+              integer(H),
+              0 >= 0
+          ->  odd__loop(0, H, Vs)
+          ;   findall(V, (between(0, H, I), odd(I, V)), Vs)
+          ).
+      
+      odd__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 1 + 2 * N.
+      
+      odd__inverse(V, N) :-
+          integer(V),
+          D is V - 1,
+          D mod 2 =:= 0,
+          N is D // 2,
+          N >= 0.
+      
+      odd__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   odd__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              odd__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(odd / 2, position(1), value(2), formula(poly([m([0], 1 / 1), m([1], 2 / 1)])), expression(1 + 2 * i), proved(induction)).
+
+165. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-0 [1,1]-1 [1,2]-2 [2,0]-0 [2,1]-2 [2,2]-4'
+   => formula: i * j
+      term: poly([m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 7
+      proof accepted: fit
+
+166. algebraplop2 samples '5,9,21,57,165,489,1461,4377'
+   => formula: 2 * 3 ^ i + 3
+      term: geo(2 / 1, 3, 3 / 1)
+      verified_on: 8 samples (5 held out), description length 15
+      proof accepted: fit
+
+167. algebraplop2 samples '0,-3,0,15,48,105,192,315,480'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 9 samples (5 held out), description length 16
+      proof accepted: fit
+
+168. algebraplop2 program examples/sequences.pl tri/2 --domain 0..14
+   => formula: tri/2 at position i = (i + i * i) // 2
+      evidence: proved(induction)
+      splice-index loops: 1 findall/between loop(s) replaced by tri__loop/3
+      proof accepted: 3 steps
+      % algebraplop2: positional formula for tri/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          (   integer(L),
+              integer(H),
+              L >= 0
+          ->  tri__loop(L, H, Ts)
+          ;   findall(T, (between(L, H, I), tri(I, T)), Ts)
+          ).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      tri__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + N * N) // 2.
+      
+      tri__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   tri__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              tri__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(tri / 2, position(1), value(2), formula(poly([m([1], 1 / 2), m([2], 1 / 2)])), expression((i + i * i) // 2), proved(induction)).
+
+169. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-4 [1,1]-6 [1,2]-8 [2,0]-8 [2,1]-11 [2,2]-14'
+   => formula: 4 * i + j + i * j
+      term: poly([m([1, 0], 4 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+170. algebraplop2 samples '1,4,16,64,256,1024'
+   => formula: 4 ^ i + 0
+      term: geo(1 / 1, 4, 0 / 1)
+      verified_on: 6 samples (3 held out), description length 13
+      proof accepted: fit
+
+171. algebraplop2 samples '0,2,2,6,4,10,6'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (2 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([1], 2 / 1)])])
+      verified_on: 7 samples (3 held out), description length 21
+      proof accepted: fit
+
+172. algebraplop2 program examples/sequences.pl sq/2 --domain 1..9
+   => formula: sq/2 at position i = i * i
+      evidence: verified_on(..(1, 9)) (no first-order recurrence proof)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sq/2, from examples/sequences.pl
+      % verified_on(..(1, 9)); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sq__formula(N, V) :-
+          integer(N),
+          N >= 1,
+          N =< 9,
+          V is N * N.
+      
+      r_spec(sq / 2, position(1), value(2), formula(poly([m([2], 1 / 1)])), expression(i * i), verified_on(..(1, 9))).
+
+173. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-3 [1,1]-6 [1,2]-9 [2,0]-6 [2,1]-10 [2,2]-14'
+   => formula: 3 * i + 2 * j + i * j
+      term: poly([m([1, 0], 3 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+174. algebraplop2 samples '0,-3,0,15'
+   => no_formula
+
+175. algebraplop2 samples '1,-1,-3,-5,-7'
+   => formula: 1 + (-2) * i
+      term: poly([m([0], 1 / 1), m([1], (-2) / 1)])
+      verified_on: 5 samples (3 held out), description length 12
+      proof accepted: fit
+
+176. algebraplop2 program examples/sequences.pl sumsq/2 --domain 2..13
+   => formula: sumsq/2 at position i = (i + 3 * (i * i) + 2 * (i * i * i)) // 6
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sumsq/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sumsq__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + 3 * (N * N) + 2 * (N * N * N)) // 6.
+      
+      r_spec(sumsq / 2, position(1), value(2), formula(poly([m([1], 1 / 6), m([2], 1 / 2), m([3], 1 / 3)])), expression((i + 3 * (i * i) + 2 * (i * i * i)) // 6), proved(induction)).
+
+177. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-2 [1,1]-3 [1,2]-4 [2,0]-4 [2,1]-6 [2,2]-8'
+   => formula: 2 * i + i * j
+      term: poly([m([1, 0], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+178. algebraplop2 samples '0,5,2,13,4,21,6,29'
+   => formula: (1 - min(1, abs(i mod 2 - 0))) * i + (1 - min(1, abs(i mod 2 - 1))) * (1 + 4 * i)
+      term: periodic(2, [poly([m([1], 1 / 1)]), poly([m([0], 1 / 1), m([1], 4 / 1)])])
+      verified_on: 8 samples (4 held out), description length 27
+      proof accepted: fit
+
+179. algebraplop2 samples '1,9,6,3,3,4,5,2,5'
+   => no_formula
+
+180. algebraplop2 program examples/sequences.pl pow2/2 --domain 0..8
+   => formula: pow2/2 at position i = 2 ^ i + 0
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for pow2/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      pow2__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 2 ^ N + 0.
+      
+      r_spec(pow2 / 2, position(1), value(2), formula(geo(1 / 1, 2, 0 / 1)), expression(2 ^ i + 0), proved(induction)).
+
+181. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-1 [1,1]-3 [1,2]-5 [2,0]-2 [2,1]-5 [2,2]-8'
+   => formula: i + j + i * j
+      term: poly([m([1, 0], 1 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 19
+      proof accepted: fit
+
+182. algebraplop2 samples '3,1,-1,-3,-5,-7'
+   => formula: 3 + (-2) * i
+      term: poly([m([0], 3 / 1), m([1], (-2) / 1)])
+      verified_on: 6 samples (4 held out), description length 13
+      proof accepted: fit
+
+183. algebraplop2 samples '0,3,4,3,0,-5,-12'
+   => formula: 4 * i + (-1) * (i * i)
+      term: poly([m([1], 4 / 1), m([2], (-1) / 1)])
+      verified_on: 7 samples (4 held out), description length 15
+      proof accepted: fit
+
+184. algebraplop2 program examples/sequences.pl fib/2 --domain 1..12
+   => no_formula for fib/2 on 1..12
+      (exit code 1)
+
+185. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-0 [1,1]-3 [1,2]-6 [2,0]-0 [2,1]-4 [2,2]-8'
+   => formula: 2 * j + i * j
+      term: poly([m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 14
+      proof accepted: fit
+
+186. algebraplop2 samples '5,5,3,1'
+   => no_formula
+
+187. algebraplop2 samples '6,12,30,84,246'
+   => formula: 3 * 3 ^ i + 3
+      term: geo(3 / 1, 3, 3 / 1)
+      verified_on: 5 samples (2 held out), description length 15
+      proof accepted: fit
+
+188. algebraplop2 program examples/sequences.pl grow/2 --domain 2..16
+   => formula: grow/2 at position i = 3 * 2 ^ i + (-1)
+      evidence: proved(induction)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for grow/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      grow__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 3 * 2 ^ N + (-1).
+      
+      r_spec(grow / 2, position(1), value(2), formula(geo(3 / 1, 2, (-1) / 1)), expression(3 * 2 ^ i + (-1)), proved(induction)).
+
+189. algebraplop2 samples '[0,0]-0 [0,1]-0 [0,2]-0 [1,0]-4 [1,1]-5 [1,2]-6 [2,0]-8 [2,1]-10 [2,2]-12'
+   => formula: 4 * i + i * j
+      term: poly([m([1, 0], 4 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 15
+      proof accepted: fit
+
+190. algebraplop2 samples '1,1,-1,-5,-11,-19,-29,-41'
+   => formula: 1 + i + (-1) * (i * i)
+      term: poly([m([0], 1 / 1), m([1], 1 / 1), m([2], (-1) / 1)])
+      verified_on: 8 samples (5 held out), description length 18
+      proof accepted: fit
+
+191. algebraplop2 samples '2,8,32,128,512,2048,8192,32768,131072'
+   => formula: 2 * 4 ^ i + 0
+      term: geo(2 / 1, 4, 0 / 1)
+      verified_on: 9 samples (6 held out), description length 14
+      proof accepted: fit
+
+192. algebraplop2 program examples/sequences.pl odd/2 --domain 0..11
+   => formula: odd/2 at position i = 1 + 2 * i
+      evidence: proved(induction)
+      inverse: odd__inverse(V, N)
+      splice-index loops: 1 findall/between loop(s) replaced by odd__loop/3
+      proof accepted: 4 steps
+      % algebraplop2: positional formula for odd/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          (   integer(0),
+              integer(H),
+              0 >= 0
+          ->  odd__loop(0, H, Vs)
+          ;   findall(V, (between(0, H, I), odd(I, V)), Vs)
+          ).
+      
+      odd__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is 1 + 2 * N.
+      
+      odd__inverse(V, N) :-
+          integer(V),
+          D is V - 1,
+          D mod 2 =:= 0,
+          N is D // 2,
+          N >= 0.
+      
+      odd__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   odd__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              odd__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(odd / 2, position(1), value(2), formula(poly([m([0], 1 / 1), m([1], 2 / 1)])), expression(1 + 2 * i), proved(induction)).
+
+193. algebraplop2 samples '[0,0]-0 [0,1]-1 [0,2]-2 [1,0]-3 [1,1]-5 [1,2]-7 [2,0]-6 [2,1]-9 [2,2]-12'
+   => formula: 3 * i + j + i * j
+      term: poly([m([1, 0], 3 / 1), m([0, 1], 1 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 20
+      proof accepted: fit
+
+194. algebraplop2 samples '8,23,83,323,1283,5123'
+   => formula: 5 * 4 ^ i + 3
+      term: geo(5 / 1, 4, 3 / 1)
+      verified_on: 6 samples (3 held out), description length 17
+      proof accepted: fit
+
+195. algebraplop2 samples '0,-3,0,15,48,105,192'
+   => formula: (-4) * i + i * i * i
+      term: poly([m([1], (-4) / 1), m([3], 1 / 1)])
+      verified_on: 7 samples (3 held out), description length 16
+      proof accepted: fit
+
+196. algebraplop2 program examples/sequences.pl tri/2 --domain 1..15
+   => formula: tri/2 at position i = (i + i * i) // 2
+      evidence: proved(induction)
+      splice-index loops: 1 findall/between loop(s) replaced by tri__loop/3
+      proof accepted: 3 steps
+      % algebraplop2: positional formula for tri/2, from examples/sequences.pl
+      % proved(induction); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          (   integer(L),
+              integer(H),
+              L >= 0
+          ->  tri__loop(L, H, Ts)
+          ;   findall(T, (between(L, H, I), tri(I, T)), Ts)
+          ).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      tri__formula(N, V) :-
+          integer(N),
+          N >= 0,
+          V is (N + N * N) // 2.
+      
+      tri__loop(I, H, Vs) :-
+          (   I > H
+          ->  Vs = []
+          ;   tri__formula(I, V),
+              I1 is I + 1,
+              Vs = [V|Vs1],
+              tri__loop(I1, H, Vs1)
+          ).
+      
+      r_spec(tri / 2, position(1), value(2), formula(poly([m([1], 1 / 2), m([2], 1 / 2)])), expression((i + i * i) // 2), proved(induction)).
+
+197. algebraplop2 samples '[0,0]-0 [0,1]-2 [0,2]-4 [1,0]-2 [1,1]-5 [1,2]-8 [2,0]-4 [2,1]-8 [2,2]-12'
+   => formula: 2 * i + 2 * j + i * j
+      term: poly([m([1, 0], 2 / 1), m([0, 1], 2 / 1), m([1, 1], 1 / 1)])
+      verified_on: 9 samples (3 held out), description length 21
+      proof accepted: fit
+
+198. algebraplop2 samples '4,8,16,32'
+   => formula: 4 * 2 ^ i + 0
+      term: geo(4 / 1, 2, 0 / 1)
+      verified_on: 4 samples (1 held out), description length 14
+      proof accepted: fit
+
+199. algebraplop2 samples '0,6,2,16,4'
+   => no_formula
+
+200. algebraplop2 program examples/sequences.pl sq/2 --domain 2..10
+   => formula: sq/2 at position i = i * i
+      evidence: verified_on(..(2, 10)) (no first-order recurrence proof)
+      proof accepted: 2 steps
+      % algebraplop2: positional formula for sq/2, from examples/sequences.pl
+      % verified_on(..(2, 10)); the proof is in the .proof file.
+      
+      tri(0, 0).
+      tri(N, T) :-
+          N > 0,
+          N1 is N - 1,
+          tri(N1, T1),
+          T is T1 + N.
+      
+      pow2(0, 1).
+      pow2(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          pow2(N1, V1),
+          V is 2 * V1.
+      
+      odd(0, 1).
+      odd(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          odd(N1, V1),
+          V is V1 + 2.
+      
+      sumsq(0, 0).
+      sumsq(N, S) :-
+          N > 0,
+          N1 is N - 1,
+          sumsq(N1, S1),
+          S is S1 + N * N.
+      
+      grow(0, 2).
+      grow(N, V) :-
+          N > 0,
+          N1 is N - 1,
+          grow(N1, V1),
+          V is 2 * V1 + 1.
+      
+      sq(N, V) :-
+          V is N * N.
+      
+      fib(0, 0).
+      fib(1, 1).
+      fib(N, F) :-
+          N > 1,
+          N1 is N - 1,
+          N2 is N - 2,
+          fib(N1, F1),
+          fib(N2, F2),
+          F is F1 + F2.
+      
+      tris(L, H, Ts) :-
+          findall(T, (between(L, H, I), tri(I, T)), Ts).
+      
+      odds(H, Vs) :-
+          findall(V, (between(0, H, I), odd(I, V)), Vs).
+      
+      sq__formula(N, V) :-
+          integer(N),
+          N >= 2,
+          N =< 10,
+          V is N * N.
+      
+      r_spec(sq / 2, position(1), value(2), formula(poly([m([2], 1 / 1)])), expression(i * i), verified_on(..(2, 10))).
